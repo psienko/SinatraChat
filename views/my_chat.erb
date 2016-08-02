@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <title>Websocket Client</title>
+
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+  <script src="http://code.jquery.com/ui/1.9.2/jquery-ui.js"></script>
+  <script type="text/javascript" src="test.js"></script> -->
+
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+  <!-- jQuery library -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+  <!-- Latest compiled JavaScript -->
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <h1>My Sinatra Chat</h1>
+  <script>
+    var socket = new WebSocket("ws://localhost:8081");
+    socket.onopen = function (event) {
+      // Here can be smth realized on open event
+    }
+
+    socket.onmessage = function (event) {
+      message = JSON.parse(event.data)
+      appendMessage(message)
+      console.log("Received via web socket: -->  ", event.message);
+    }
+
+    function sendMsg() {
+      var nickName = $('#nickname').val();
+      var msg = $('#message').val();
+      var msgObject = JSON.stringify({ service_type: 'chat', nickname: nickName, content: msg });
+      socket.send(msgObject);
+      $('#nickname').val('');
+      $('#message').val('');
+    }
+
+    function appendMessage(msg) {
+      message_html = buildMessageHtml(msg);
+      $("#msgs-box").append(message_html);
+    }
+
+    function buildMessageHtml(msg) {
+      return '<div class="panel panel-info msg">\
+        <div class="panel-heading">\
+          <div class="row">\
+            <div class="col-sm-9"><h3 class="panel-title">' + msg.nickname + '</h3></div>\
+            <div class="col-sm-3 pull-right"><span>at ' + msg.timestamp + '</span></div>\
+          </div>\
+        </div>\
+        <div class="panel-body">' + msg.content + '</div>\
+      </div>'
+    }
+
+    $(document).ready(function(){
+      $("#send").click(function(e){
+          e.preventDefault();
+          sendMsg();
+      });
+    });
+  </script>
+
+
+
+
+  <div data-role="page">
+      <div data-role = "header">
+        <h1>Simple Chat</h1>
+        <form role="form">
+          <div class="form-group">
+            <input id="nickname" class="form-control" type="text" value="" placeholder="Nickname">
+          </div>
+          <div class="form-group">
+            <textarea id="message" class="form-control" type='text' value="" placeholder="Start chat here"></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit" class="btn btn-md btn-success" id="send" data-role = 'button'>SEND</button>
+          </div>
+        </form>
+
+        <div class="panel panel-default">
+          <h3>Messages:</h3>
+          <div id="msgs-box" class="panel-body">
+          </div>
+        </div>
+      </div>
+  </div>
+</body>
+</html>
