@@ -18,11 +18,14 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 2.0)
       rails-html-sanitizer (~> 1.0, >= 1.0.2)
+    activemodel (5.0.0)
+      activesupport (= 5.0.0)
     activesupport (5.0.0)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (~> 0.7)
       minitest (~> 5.1)
       tzinfo (~> 1.1)
+    bson (4.1.1)
     builder (3.2.2)
     concurrent-ruby (1.0.2)
     em-websocket (0.5.1)
@@ -36,6 +39,11 @@ GEM
       nokogiri (>= 1.5.9)
     mini_portile2 (2.1.0)
     minitest (5.9.0)
+    mongo (2.2.7)
+      bson (~> 4.0)
+    mongoid (6.0.0.beta)
+      activemodel (~> 5.0)
+      mongo (~> 2.2)
     nio4r (1.2.1)
     nokogiri (1.6.8)
       mini_portile2 (~> 2.1.0)
@@ -61,7 +69,11 @@ PLATFORMS
 
 DEPENDENCIES
   actioncable (~> 5.0)
+  activesupport
+  bson (~> 4.1.1)
   em-websocket
+  mongo (~> 2.2)
+  mongoid (~> 6.0.0.beta)
 
 BUNDLED WITH
    1.11.2
