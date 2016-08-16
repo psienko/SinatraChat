@@ -4,6 +4,9 @@ require 'eventmachine'
 #require 'sinatra/base'
 require 'thin'
 require 'active_support/all'
+require 'mongo'
+require 'json/ext'
+require 'mongoid'
 
 class MyChat < Sinatra::Application
   # enable :sessions # maybe it isn't required
@@ -20,6 +23,8 @@ class MyChat < Sinatra::Application
   configure do
     set :threaded, false
   end
+
+  Mongoid.load!("mongoid.yml")
 
   helpers do
     include Rack::Utils

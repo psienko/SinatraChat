@@ -2,7 +2,6 @@ class Websocket
   def run(host: '0.0.0.0', port: '8081')
     @channel = EM::Channel.new
     @users = {}
-    @messages = []
 
     EventMachine::WebSocket.start(host: host, port: port) do |ws|
       ws.onopen do
@@ -12,7 +11,7 @@ class Websocket
         @users[ws.object_id] = sid
 
         # Push messages to the user
-        @messages.each do |message|
+        Message.all.each do |message|
           ws.send message.to_json
         end
       end
@@ -20,10 +19,8 @@ class Websocket
       ws.onmessage do |msg|
         params = JSON.parse(msg).with_indifferent_access
         if params[:service_type] == 'chat'
-          message = Message.new(nickname: params[:nickname], content: params[:content])
-          @messages << message
-          @messages.shift if @messages.length > 10
-          @channel.push message.to_json
+          message = Message.build_chat_message(params)
+          @channel.push message.to_json if message.save
         end
       end
 
